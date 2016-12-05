@@ -199,30 +199,40 @@ static int logMaxLength = 500;
     if (!message) {
         return @"";
     }
-    NSData *data = [NSJSONSerialization dataWithJSONObject:message options:(NSJSONWritingOptions)(pretty ? NSJSONWritingPrettyPrinted : 0) error:nil];
-    if (!data) {
-        return @"";
+    @try {
+        NSData *data = [NSJSONSerialization dataWithJSONObject:message options:(NSJSONWritingOptions)(pretty ? NSJSONWritingPrettyPrinted : 0) error:nil];
+        if (!data) {
+            return @"";
+        }
+        NSString *result = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        if (!result) {
+            return @"";
+        }
+        return result;
+    } @catch (NSException *exception) {
+        
     }
-    NSString *result = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    if (!result) {
-        return @"";
-    }
-    return result;
+    return @""
 }
 
 - (NSArray*)_deserializeMessageJSON:(NSString *)messageJSON {
     if (!messageJSON) {
         return @[];
     }
-    NSData *data = [messageJSON dataUsingEncoding:NSUTF8StringEncoding];
-    if (!data) {
-        return @[];
+    @try {
+        NSData *data = [messageJSON dataUsingEncoding:NSUTF8StringEncoding];
+        if (!data) {
+            return @[];
+        }
+        NSArray *result = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
+        if (!result) {
+            return @[];
+        }
+        return result;
+    } @catch (NSException *exception) {
+        
     }
-    NSArray *result = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
-    if (!result) {
-        return @[];
-    }
-    return result;
+    return @[]
 }
 
 - (void)_log:(NSString *)action json:(id)json {
