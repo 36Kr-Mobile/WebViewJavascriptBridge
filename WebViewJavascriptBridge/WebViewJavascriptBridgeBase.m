@@ -196,11 +196,33 @@ static int logMaxLength = 500;
 }
 
 - (NSString *)_serializeMessage:(id)message pretty:(BOOL)pretty{
-    return [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:message options:(NSJSONWritingOptions)(pretty ? NSJSONWritingPrettyPrinted : 0) error:nil] encoding:NSUTF8StringEncoding];
+    if (!message) {
+        return @"";
+    }
+    NSData *data = [NSJSONSerialization dataWithJSONObject:message options:(NSJSONWritingOptions)(pretty ? NSJSONWritingPrettyPrinted : 0) error:nil];
+    if (!data) {
+        return @"";
+    }
+    NSString *result = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    if (!result) {
+        return @"";
+    }
+    return result;
 }
 
 - (NSArray*)_deserializeMessageJSON:(NSString *)messageJSON {
-    return [NSJSONSerialization JSONObjectWithData:[messageJSON dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingAllowFragments error:nil];
+    if (!messageJSON) {
+        return @[];
+    }
+    NSData *data = [messageJSON dataUsingEncoding:NSUTF8StringEncoding];
+    if (!data) {
+        return @[];
+    }
+    NSArray *result = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
+    if (!result) {
+        return @[];
+    }
+    return result;
 }
 
 - (void)_log:(NSString *)action json:(id)json {
