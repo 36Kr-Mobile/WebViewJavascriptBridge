@@ -212,7 +212,7 @@ static int logMaxLength = 500;
     } @catch (NSException *exception) {
         
     }
-    return @""
+    return @"";
 }
 
 - (NSArray*)_deserializeMessageJSON:(NSString *)messageJSON {
@@ -232,7 +232,7 @@ static int logMaxLength = 500;
     } @catch (NSException *exception) {
         
     }
-    return @[]
+    return @[];
 }
 
 - (void)_log:(NSString *)action json:(id)json {
